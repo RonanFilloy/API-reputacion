@@ -2,7 +2,9 @@ function validateRequestBody(req, res, next) {
   const { field } = req.params;
   const validFields = ["field_1", "author", "description"];
   if (!validFields.includes(field)) {
-    return res.status(400).json({ error: "Invalid field" });
+    return res
+      .status(400)
+      .json({ error: `${field} is not a valid field to uppercase` });
   }
   next();
 }
