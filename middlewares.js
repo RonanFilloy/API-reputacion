@@ -19,9 +19,9 @@ function checkRequestBody(req, res, next) {
 function validateFields(req, res, next) {
   let { field_1, author, description, my_numeric_field } = req.body;
   if (
-    !isNaN(field_1) ||
-    !isNaN(author) ||
-    !isNaN(description) ||
+    typeof field_1 !== "string" ||
+    typeof author !== "string" ||
+    typeof description !== "string" ||
     isNaN(my_numeric_field)
   ) {
     return res.status(400).json({ error: "Invalid field types" });
