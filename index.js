@@ -83,13 +83,9 @@ async function startServer() {
       const result = await client.query(query, [id]);
       const data = result.rows[0];
       client.release();
-      if (data) {
-        return res.json(data);
-      } else {
-        return res.status(404).json("Data not found");
-      }
-    } catch {
-      return res.status(500).json({ error: "Internal server error" });
+      return res.json(data);
+    } catch (error) {
+      return res.status(404).json({ error: "Data not found" });
     }
   });
 
