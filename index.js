@@ -7,7 +7,6 @@ const {
   checkRequestBody,
   validateFields,
 } = require("./middlewares");
-const { release } = require("os");
 
 const app = express();
 
