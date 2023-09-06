@@ -31,8 +31,8 @@ function validateFields(req, res, next) {
   next();
 }
 
-const authorizedUser = "";
-const authorizedPassword = "";
+const authorizedUser = "Ronan";
+const authorizedPassword = "Filloy";
 
 const authenticateUser = (req, res, next) => {
   const user = basicAuth(req);
