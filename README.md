@@ -4,8 +4,11 @@ Se conecta al puerto local 5000 y accede a una base de datos hosteada en render 
 Los requests funcionan de la siguiente forma:
 
 El POST request recibe los campos mostrados en el enunciado y usa 3 funciones de middleware para realizar validaciones:
+
 1- se verifica que el cuerpo del post request no est vacio
+
 2- se verifica que el parametro del request coincida con el nombre de una de las variables a cambiar a mayuscula
+
 3- se verifica que los parametros del cuerpo del post coincidan con los requeridos en el enunciado
 
 Una vez pasados los middleware se cambia a mayuscula el valor del campo especificado, se genera un ID usando uuid, y se guarda la informacion en la base
