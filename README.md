@@ -17,4 +17,6 @@ de datos devolviendo el ID generado en formato JSON
 El GET request recibe un ID como parametro y busca en la base de datos el row que tenga ese ID como parametro. En caso de no encontrarlo
 devuelve un status 404 indicando que no existe ese elemento en la base de datos. Si lo encuentra devuelve el row entero como especificado en el enunciado.
 
-El stack usado es: Node.js, Express, JavaScript, uuid, Postgres, Render
+Para acceder a los requests use Postman, recomiendo usar el mismo metodo.
+
+El stack usado es: Node.js, Express, JavaScript, uuid, Postgres, Render, Postman
