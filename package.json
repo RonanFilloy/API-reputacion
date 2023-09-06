@@ -1,7 +1,7 @@
 {
   "name": "fast-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "La API esta escrita en Node.js y express.\r Se conecta al puerto local 5000 y accede a una base de datos hosteada en render (live).",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,5 +16,13 @@
     "node": "^20.5.1",
     "pg": "^8.11.3",
     "uuid": "^9.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RonanFilloy/API-reputacion.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RonanFilloy/API-reputacion/issues"
+  },
+  "homepage": "https://github.com/RonanFilloy/API-reputacion#readme"
 }
