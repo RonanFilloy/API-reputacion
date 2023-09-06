@@ -6,6 +6,7 @@ const {
   validateRequestBody,
   checkRequestBody,
   validateFields,
+  authenticateUser,
 } = require("./middlewares");
 
 const app = express();
@@ -46,6 +47,7 @@ async function startServer() {
     checkRequestBody,
     validateRequestBody,
     validateFields,
+    authenticateUser,
     async (req, res) => {
       const { field } = req.params;
       let { field_1, author, description, my_numeric_field } = req.body;
@@ -75,7 +77,7 @@ async function startServer() {
     }
   );
 
-  app.get("/data/:id", async (req, res) => {
+  app.get("/data/:id", authenticateUser, async (req, res) => {
     const { id } = req.params;
     try {
       const client = await pool.connect();

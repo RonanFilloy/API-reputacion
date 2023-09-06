@@ -1,3 +1,5 @@
+const basicAuth = require("basic-auth");
+
 function validateRequestBody(req, res, next) {
   const { field } = req.params;
   const validFields = ["field_1", "author", "description"];
@@ -29,4 +31,27 @@ function validateFields(req, res, next) {
   next();
 }
 
-module.exports = { validateRequestBody, checkRequestBody, validateFields };
+const authorizedUser = "";
+const authorizedPassword = "";
+
+const authenticateUser = (req, res, next) => {
+  const user = basicAuth(req);
+
+  if (
+    !user ||
+    user.name !== authorizedUser ||
+    user.pass !== authorizedPassword
+  ) {
+    res.set("WWW-Authenticate", "Basic realm=Authorization Required");
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  next();
+};
+
+module.exports = {
+  validateRequestBody,
+  checkRequestBody,
+  validateFields,
+  authenticateUser,
+};
