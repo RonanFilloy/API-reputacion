@@ -1,19 +1,24 @@
-const express = require('express');
-require('dotenv').config();
-const { Pool } = require('pg');
-const { v4: uuid } = require('uuid');
+const express = require("express");
+require("dotenv").config();
+const { Pool } = require("pg");
+const { v4: uuid } = require("uuid");
+const {
+  validateRequestBody,
+  checkRequestBody,
+  validateFields,
+} = require("./middlewares");
+const { release } = require("os");
 
 const app = express();
 
 app.use(express.json());
 
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    ssl: true,
-    port: 5432
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: 5432,
 });
 
 const createTableQuery = `
@@ -27,79 +32,77 @@ const createTableQuery = `
 `;
 
 pool.query(createTableQuery, (err, result) => {
-    if(err) {
-        console.error('Error creating table: ', err);
-    } else {
-        console.log('Table created succesfully');
-        startServer();
-    }
-})
-
-function uppercaseField(string) {
-    return string.toUppercase();
-}
+  if (err) {
+    console.error("Error creating table: ", err);
+  } else {
+    console.log("Table created succesfully");
+    startServer();
+  }
+});
 
 async function startServer() {
+  app.post(
+    "/input/:field",
+    checkRequestBody,
+    validateRequestBody,
+    validateFields,
+    async (req, res) => {
+      const { field } = req.params;
+      let { field_1, author, description, my_numeric_field } = req.body;
+      const id = uuid();
+      switch (field) {
+        case "field_1":
+          field_1 = field_1.toUpperCase();
+          break;
+        case "author":
+          author = author.toUpperCase();
+          break;
+        case "description":
+          description = description.toUpperCase();
+          break;
+      }
+      try {
+        const client = await pool.connect();
+        const query =
+          "INSERT INTO data (id, field_1, author, description, my_numeric_field) VALUES ($1, $2, $3, $4, $5)";
+        const values = [id, field_1, author, description, my_numeric_field];
+        await client.query(query, values);
+        client.release();
+        return res.json({ id: id });
+      } catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  );
 
-    app.post('/input/:field', async (req, res) => {
-        const {field} = req.params;
-        const valueNames = ['field_1', 'author', 'description']
-        if(!valueNames.includes(field)) {
-            return res.status(400).json({error: 'Invalid field'});
-        }
-        const {field_1, author, description, my_numeric_field} = req.body;
-        const id = uuid();
-        switch(field) {
-            case 'field_1':
-                field_1 = field_1.toUpperCase();
-                break;
-            case 'author':
-                author = author.toUpperCase();
-                break;
-            case 'description':
-                description = description.toUpperCase();
-                break;
-        }
-        try {
-            const client = await pool.connect();
-            const query = 'INSERT INTO data (id, field_1, author, description, my_numeric_field) VALUES ($1, $2, $3, $4, $5)';
-            const values = [id, field_1, author, description, my_numeric_field]
-            await client.query(query, values);
-            client.release();
-            return res.json({id: id});
-        } catch(error) {
-            return res.status(500).json({error: 'Internal server error'})
-        }
+  app.get("/data/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const client = await pool.connect();
+      const query = "SELECT * FROM data WHERE id = $1";
+      const result = await client.query(query, [id]);
+      const data = result.rows[0];
+      client.release();
+      if (data) {
+        return res.json(data);
+      } else {
+        return res.status(404).json("Data not found");
+      }
+    } catch {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  const server = app.listen(5000, () => {
+    console.log("Server started on port 5000");
+  });
+
+  process.on("SIGINT", () => {
+    console.log("Stopping server...");
+    server.close(() => {
+      console.log("Server stopped.");
+      pool.end();
+      process.exit(0);
     });
-
-    app.get('/data/:id', async (req, res) => {
-        const {id} = req.params;
-        try {
-            const client = await pool.connect();
-            const query = 'SELECT * FROM data WHERE id = $1';
-            const result = await client.query(query, id);
-            const data = result.rows[0];
-            client.release();
-            if(data) {
-                return res.json(data);
-            } else {
-                return res.status(404).json('Data not found');
-            }
-        } catch {
-            return res.status(500).json({error: 'Internal server error'});
-        }
-    })
-
-    const server = app.listen(5000, () => {
-        console.log('Server started on port 5000');
-    });
-
-    process.on('SIGINT', () => {
-        console.log('Stopping server...');
-        server.close(() => {
-            console.log('Server stopped.');
-            pool.end();
-            process.exit(0);
-        });
-    })
+  });
 }
