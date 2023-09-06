@@ -17,6 +17,13 @@ de datos devolviendo el ID generado en formato JSON
 El GET request recibe un ID como parametro y busca en la base de datos el row que tenga ese ID como parametro. En caso de no encontrarlo
 devuelve un status 404 indicando que no existe ese elemento en la base de datos. Si lo encuentra devuelve el row entero como especificado en el enunciado.
 
-Para acceder a los requests use Postman, recomiendo usar el mismo metodo.
+Para acceder a los requests use Postman, recomiendo usar el mismo metodo. Los datos de autenticacion se mandaran via mail.
 
-El stack usado es: Node.js, Express, JavaScript, uuid, Postgres, Render, Postman
+Tambien esta incluido un Dockerfile para crear un contenedor de Docker que se conectara al puerto local 5000.
+Los comandos para crear el contenedor son: 
+
+docker build -t my-node-app . para el build (my-node-app es el nombre a asignar a la app)
+
+docker run -p 5000:5000 --name my-node-container -d my-node-app para correrlo (my-node-container es el nombre a asignar al contenedor)
+
+El stack usado es: Node.js, Express, JavaScript, uuid, Postgres, Render, Postman, Docker
