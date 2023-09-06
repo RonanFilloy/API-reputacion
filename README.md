@@ -5,7 +5,7 @@ Los requests funcionan de la siguiente forma:
 
 El POST request recibe los campos mostrados en el enunciado y usa 3 funciones de middleware para realizar validaciones:
 
-1- se verifica que el cuerpo del post request no est vacio
+1- se verifica que el cuerpo del post request no este vacio
 
 2- se verifica que el parametro del request coincida con el nombre de una de las variables a cambiar a mayuscula
 
