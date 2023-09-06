@@ -1,6 +1,8 @@
 La API esta escrita en Node.js y express.
 Se conecta al puerto local 5000 y accede a una base de datos hosteada en render (live).
 
+Para instalar dependencias usar npm install
+
 Los requests funcionan de la siguiente forma:
 
 El POST request recibe los campos mostrados en el enunciado y usa 3 funciones de middleware para realizar validaciones:
